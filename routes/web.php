@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Home routes
+Route::get('/', [
+    'as' => 'home',
+    'uses' => 'HomeController@index',
+]);
+
+
+//Employees routes
+Route::get('/employees', [
+    'as' => 'employees',
+    'uses' => 'EmployeesController@index',
+]);
