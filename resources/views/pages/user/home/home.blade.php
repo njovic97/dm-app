@@ -7,9 +7,9 @@
             <div class="row justify-content-center">
                 <div class="col-4 text-center">
                     <span class="text-muted mr-2">Employees Quick Add: </span>
-                    <a href="/employees/create" class="btn bnt-sm rounded-circle btn-success m-auto"><i
+                    <button type="button" id="addEmployeeBtn2" class="btn bnt-sm rounded-circle btn-success m-auto"><i
                             class="fa fa-plus text-info"
-                            aria-hidden="true"></i></a>
+                            aria-hidden="true"></i></button>
                 </div>
                 <div class="col-4 text-center">
                     <span class="text-muted mr-2">Jobs Quick Add: </span>
@@ -19,9 +19,9 @@
                 </div>
                 <div class="col-4 text-center">
                     <span class="text-muted mr-2">Prices Quick Add: </span>
-                    <a href="/prices/create" class="btn bnt-sm rounded-circle btn-success m-auto"><i
+                    <button type="button" id="addPriceBtn2" class="btn bnt-sm rounded-circle btn-success m-auto"><i
                             class="fa fa-plus text-info"
-                            aria-hidden="true"></i></a>
+                            aria-hidden="true"></i></button>
                 </div>
 
 
@@ -29,8 +29,8 @@
         </div>
     </div>
 
-    <div class="card col-6 border-radius">
-        <div class="card-body">
+    <div class="card col-6 border-radius home-main-card home-main-card-first">
+        <div class="card-body statisticsCard">
             <h4 class="card-title"><i class="fa fa-bar-chart mr-2 text-info" aria-hidden="true"></i> Statistics</h4>
             <div class="card-body">
                 <canvas id="myChart" width="400" height="400"></canvas>
@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="card col-5 ml-auto border-radius">
+    <div class="card col-6 border-radius home-main-card">
         <div class="card-body">
             <h4 class="card-title pb-3"><i class="fa fa-file-text mr-2 text-danger" aria-hidden="true"></i> Description
                 & Manual</h4>
@@ -64,40 +64,59 @@
         </div>
     </div>
 
+    @include('modals.modal-addEmployee')
+    @include('modals.modal-addPrice')
+
     <script>
 
         $(document).ready(function () {
-
-            var ctx = document.getElementById('myChart');
-            var myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Employees', 'Jobs', 'Pricing'],
-                    datasets: [{
-                        label: 'Count',
-                        data: [10, 12, 5],
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
+            showLoader({el: '.statisticsCard', background: 'rgb(255 255 255);', color: "#c38d9e", destroy: "false"});
+            $.ajax({
+                url: '/home/get-statistics',
+                type: 'get',
+                "_token": "{{ csrf_token() }}",
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            }).done(function (result) {
+                var ctx = document.getElementById('myChart');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Employees', 'Jobs', 'Prices'],
+                        datasets: [{
+                            label: 'Count',
+                            data: result.data,
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                            ],
+                            borderWidth: 1
                         }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
                     }
-                }
+                });
+                hideLoader()
+            });
+
+            $('#addEmployeeBtn2').click(function () {
+                $('#addEmployee').modal('show');
+            });
+
+            $('#addPriceBtn2').click(function () {
+                $('#addPrice').modal('show');
             });
         });
     </script>
