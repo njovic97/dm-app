@@ -62,7 +62,8 @@ class JobsController extends Controller
     public function getJobInfo(Request $request)
     {
         $job = Job::where('id', $request->job_id)->first();
-        return response()->json(['job' => $job]);
+        $due_date = $job->due_date->format('m/d/Y');
+        return response()->json(['job' => $job, 'due_date' => $due_date]);
     }
 
     public function editJob(Request $request)

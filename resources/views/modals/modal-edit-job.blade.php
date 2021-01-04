@@ -108,7 +108,7 @@
                 $('#jobEditPrice').val(result.job.price_id);
                 $('#jobEditStatus').val(result.job.status);
                 $('#titleEditInp').val(result.job.title);
-                $('#dueDateEditInp').val(result.job.due_date);
+                $('#dueDateEditInp').val(result.due_date);
                 $('#contactEditInp').val(result.job.contact);
                 hideLoader();
             });
